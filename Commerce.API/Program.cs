@@ -21,8 +21,9 @@ builder.Services.AddScoped<IProductRepo, ProductRepo>();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 // For Identity
+
 builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<CommerceDbContext>()
+    .AddEntityFrameworkStores<CommerceAuthDbContext>()
     .AddDefaultTokenProviders();
 
 // Adding Authentication
