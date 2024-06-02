@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Commerce.Infrastucture\Commerce.Infrastucture.csproj" />
+    <ProjectReference Include="..\Commerce.Domain\Commerce.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Interface\" />
+    <None Remove="Repository\" />
+    <None Remove="Service\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interface\" />
+    <Folder Include="Repository\" />
+    <Folder Include="Service\" />
+  </ItemGroup>
+</Project>
