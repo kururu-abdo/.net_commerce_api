@@ -23,7 +23,9 @@ builder.Services.AddInfrastructure(builder.Configuration);
 // For Identity
 
 builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<CommerceAuthDbContext>()
+    .AddEntityFrameworkStores<CommerceAuthDbContext>(
+
+    )
     .AddDefaultTokenProviders();
 
 // Adding Authentication

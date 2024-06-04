@@ -12,7 +12,7 @@ namespace Commerce.Domain
 		public string Password { get; set; }
 		public string UserAvatarId { get; set; }
 
-
+		public IList<string>  Roles { get; set; }
 		public ICollection<UserAddress> Addresses {get; set;}
 
 public UserAvatar UserAvatar { get; set; }

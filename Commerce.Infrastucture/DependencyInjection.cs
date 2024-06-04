@@ -1,5 +1,6 @@
 ﻿using System;
 using Commerce.Infrastucture.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -16,7 +17,20 @@ namespace Commerce.Infrastucture
             )
         {
             services.AddDbContext<CommerceDbContext>(
- options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
+                options =>
+
+                options.  UseMySql(
+
+configuration.GetConnectionString("MySql")
+
+
+                    
+
+                    ,
+
+
+                    ServerVersion.AutoDetect(configuration.GetConnectionString("MySql")))
+            //options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
                 );
 
 

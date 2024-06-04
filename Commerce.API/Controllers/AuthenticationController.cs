@@ -7,6 +7,7 @@ using Commerce.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Commerce.Application.Repository;
 
 namespace Commerce.API.Controllers
 {
@@ -15,15 +16,25 @@ namespace Commerce.API.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
+
+        private readonly IAuthRepo _authRepo;
+        private readonly IUserRepo _userRepo;
         private readonly UserManager<User> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IConfiguration _configuration;
 
-        public AuthenticationController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthenticationController(UserManager<User>
+            userManager, RoleManager<IdentityRole> roleManager,
+            IAuthRepo authRepo,
+            IUserRepo userRepo,
+            IConfiguration configuration)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
             _configuration = configuration;
+            _authRepo = authRepo;
+            _userRepo = userRepo;
+
         }
 
 
@@ -31,11 +42,17 @@ namespace Commerce.API.Controllers
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var user = await userManager.FindByNameAsync(model.Email);
-            if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
-            {
-                var userRoles = await userManager.GetRolesAsync(user);
+            var user = await
+                _authRepo.IsUserAvailable(model.Email);
 
+            if (user != null
+                && await _authRepo.CheckPasswordAsync(user, model.Password)
+
+                )
+            {
+                var userRoles = await
+                    _userRepo.GetUserRoles(model.Email);
+                //userManager.GetRolesAsync(user);
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
@@ -44,7 +61,7 @@ namespace Commerce.API.Controllers
 
                 foreach (var userRole in userRoles)
                 {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                    authClaims.Add(new Claim(ClaimTypes.Role, userRole as string));
                 }
 
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
@@ -65,6 +82,8 @@ namespace Commerce.API.Controllers
             }
             return Unauthorized();
         }
+
+
         /*
         [HttpPost]
         [Route("register")]
